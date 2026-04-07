@@ -1,0 +1,21 @@
+-- Admin authentication and private data storage
+CREATE TABLE IF NOT EXISTS admin_users (
+  id SERIAL PRIMARY KEY,
+  singleton BOOLEAN NOT NULL DEFAULT TRUE UNIQUE,
+  username TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS admin_private_data (
+  id SERIAL PRIMARY KEY,
+  label TEXT NOT NULL,
+  value TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS admin_auth_state (
+  singleton BOOLEAN NOT NULL DEFAULT TRUE UNIQUE,
+  invalid_before TIMESTAMPTZ NOT NULL DEFAULT TO_TIMESTAMP(0)
+);

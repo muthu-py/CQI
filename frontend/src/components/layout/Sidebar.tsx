@@ -1,6 +1,10 @@
 import { NavLink } from 'react-router-dom';
 
 export function Sidebar() {
+  const triggerDownload = () => {
+    window.dispatchEvent(new CustomEvent('cqi:download-report'));
+  };
+
   return (
     <aside className="hidden lg:flex flex-col h-screen sticky top-0 p-4 gap-4 bg-slate-100 dark:bg-slate-900 w-64 border-r-0 font-manrope text-sm font-medium">
       <div className="flex items-center gap-3 px-2 mb-6">
@@ -36,18 +40,13 @@ export function Sidebar() {
         </NavLink>
       </nav>
       <div className="mt-auto space-y-1 border-t border-outline-variant/10 pt-4">
-        <button className="w-full mb-4 bg-primary text-on-primary py-2.5 rounded-lg font-bold shadow-lg shadow-primary/20 hover:scale-95 transition-transform flex items-center justify-center gap-2">
+        <button
+          onClick={triggerDownload}
+          className="w-full mb-4 bg-primary text-on-primary py-2.5 rounded-lg font-bold shadow-lg shadow-primary/20 hover:scale-95 transition-transform flex items-center justify-center gap-2"
+        >
           <span className="material-symbols-outlined text-sm">download</span>
           Download Report
         </button>
-        <a className="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
-          <span className="material-symbols-outlined text-xl">settings</span>
-          <span>Settings</span>
-        </a>
-        <a className="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
-          <span className="material-symbols-outlined text-xl">help</span>
-          <span>Support</span>
-        </a>
       </div>
     </aside>
   );
