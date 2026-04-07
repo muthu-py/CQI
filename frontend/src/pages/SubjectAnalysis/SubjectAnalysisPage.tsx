@@ -25,7 +25,7 @@ export function SubjectAnalysisPage() {
       const [coRes, poRes, mapRes] = await Promise.all([
         analyticsService.getCoAttainment(filters),
         analyticsService.getPoAttainment(filters),
-        analyticsService.getCoPoMapping(filters)
+        analyticsService.getCoPoMapping(filters),
       ]);
       
       // Adapt backend data to frontend charts

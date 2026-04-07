@@ -11,6 +11,7 @@ router.get('/co-attainment', analysisController.getCoAttainment);
 router.get('/po-attainment', analysisController.getPoAttainment);
 router.get('/attendance', analysisController.getAttendance);
 router.get('/teacher-performance', analysisController.getTeacher);
+router.get('/teacher-performance-insights', analysisController.getTeacherInsights);
 router.get('/comparisons', analysisController.getComparison);
 router.get('/co-po-mapping', analysisController.getCoPoMapping);
 router.get('/admin/filter-options', analysisController.getAdminFilterOptions);

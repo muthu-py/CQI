@@ -38,6 +38,13 @@ export function Sidebar() {
           <span className="material-symbols-outlined text-xl">table_chart</span>
           <span>Batch Analysis</span>
         </NavLink>
+        <NavLink 
+          to="/teacher" 
+          className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded-lg transition-transform duration-200 group hover:translate-x-1 ${isActive ? 'bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-400 shadow-sm' : 'text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-200 dark:hover:bg-slate-800'}`}
+        >
+          <span className="material-symbols-outlined text-xl">school</span>
+          <span>Teacher Analysis</span>
+        </NavLink>
       </nav>
       <div className="mt-auto space-y-1 border-t border-outline-variant/10 pt-4">
         <button

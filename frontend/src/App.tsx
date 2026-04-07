@@ -5,6 +5,7 @@ import { SubjectAnalysisPage } from './pages/SubjectAnalysis/SubjectAnalysisPage
 import { CohortAnalysisPage } from './pages/CohortAnalysis/CohortAnalysisPage';
 import { BatchAnalysisPage } from './pages/BatchAnalysis/BatchAnalysisPage';
 import { LoginPage } from './pages/LoginPage';
+import { TeacherAnalysisPage } from './pages/TeacherAnalysis/TeacherAnalysisPage';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
             <Route path="/subject" element={<SubjectAnalysisPage />} />
             <Route path="/cohort" element={<CohortAnalysisPage />} />
             <Route path="/batch" element={<BatchAnalysisPage />} />
+            <Route path="/teacher" element={<TeacherAnalysisPage />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

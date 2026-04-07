@@ -7,11 +7,12 @@ export function TopNavBar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const pageTitle = pathname.startsWith('/cohort')
-    ? 'Cohort Analysis'
-    : pathname.startsWith('/batch')
-      ? 'Batch Analysis'
-      : 'Subject Analysis';
+  const pageTitle = (() => {
+    if (pathname.startsWith('/cohort')) return 'Cohort Analysis';
+    if (pathname.startsWith('/batch')) return 'Batch Analysis';
+    if (pathname.startsWith('/teacher')) return 'Teacher Analysis';
+    return 'Subject Analysis';
+  })();
 
   async function handleSignout() {
     try {
