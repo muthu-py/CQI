@@ -2,7 +2,12 @@ import { useLocation } from 'react-router-dom';
 
 export function TopNavBar() {
   const { pathname } = useLocation();
-  const pageTitle = pathname.startsWith('/cohort') ? 'Cohort Analysis' : 'Subject Analysis';
+  const pageTitle = (() => {
+    if (pathname.startsWith('/cohort')) return 'Cohort Analysis';
+    if (pathname.startsWith('/batch')) return 'Batch Analysis';
+    if (pathname.startsWith('/teacher')) return 'Teacher Analysis';
+    return 'Subject Analysis';
+  })();
 
   return (
     <header className="sticky top-0 z-50 flex justify-between items-center w-full px-6 py-3 bg-slate-50 dark:bg-slate-950 font-manrope antialiased border-b border-outline-variant/10">

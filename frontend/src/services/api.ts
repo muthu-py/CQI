@@ -21,6 +21,7 @@ export const analyticsService = {
   getCoPoMapping: (params?: Filters) => api.get('/co-po-mapping', { params }),
   getCoAttainment: (params?: Filters) => api.get('/co-attainment', { params }),
   getPoAttainment: (params?: Filters) => api.get('/po-attainment', { params }),
+  getTeacherPerformanceInsights: (params?: Filters) => api.get('/teacher-performance-insights', { params }),
   getPerformance: (params?: Filters) => api.get('/performance', { params }),
   getAttendance: (params?: Filters) => api.get('/attendance', { params }),
   getComparisons: (params?: Filters) => api.get('/comparisons', { params }),

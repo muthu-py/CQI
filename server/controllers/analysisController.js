@@ -53,6 +53,15 @@ exports.getTeacher = async (req, res, next) => {
   }
 };
 
+exports.getTeacherInsights = async (req, res, next) => {
+  try {
+    const data = await teacherService.getTeacherPerformanceInsights(req.normalizedFilters || req.query);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getComparison = async (req, res, next) => {
   try {
     const data = await comparisonService.calculateComparison(req.normalizedFilters || req.query);
