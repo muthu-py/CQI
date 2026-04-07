@@ -3,6 +3,7 @@ import { DashboardLayout } from './components/layout/DashboardLayout';
 import { SubjectAnalysisPage } from './pages/SubjectAnalysis/SubjectAnalysisPage';
 import { CohortAnalysisPage } from './pages/CohortAnalysis/CohortAnalysisPage';
 import { BatchAnalysisPage } from './pages/BatchAnalysis/BatchAnalysisPage';
+import { InternalExternalPage } from './pages/InternalExternal/InternalExternalPage';
 
 export default function App() {
   return (
@@ -13,9 +14,11 @@ export default function App() {
           <Route path="subject" element={<SubjectAnalysisPage />} />
           <Route path="cohort" element={<CohortAnalysisPage />} />
           <Route path="batch" element={<BatchAnalysisPage />} />
+          <Route path="internal-external" element={<InternalExternalPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
 }
+
 

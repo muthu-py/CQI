@@ -1,9 +1,27 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../../.env') });
-const { Pool } = require('pg');
+const { Pool, types } = require('pg');
+
+// Parse PostgreSQL numeric (1700) and int8 (20) as JavaScript numbers
+// This prevents "value.toFixed is not a function" crashes in the React frontend
+// because natively pg returns numerics as strings to prevent loss of precision.
+types.setTypeParser(1700, function(val) { return parseFloat(val); });
+types.setTypeParser(20, function(val) { return parseInt(val, 10); });
+
+const connectionString = process.env.DATABASE_URL || process.env.supabaseUrl;
+
+if (!connectionString) {
+  throw new Error('Missing DATABASE_URL (or legacy supabaseUrl) in .env');
+}
 
 const pool = new Pool({
-  connectionString: process.env.supabaseUrl || process.env.DATABASE_URL
+  connectionString,
+  ssl: { rejectUnauthorized: false },
+});
+
+// ── Prevent idle-client disconnects from crashing the process ───────────────
+// When Supabase (or any PG server) drops an idle connection, the Pool emits
+// an 'error' event.  Without a listener Node treats it as fatal and exits.
+pool.on('error', (err) => {
+  console.error('⚠️  Unexpected PG pool error (idle client):', err.message);
 });
 
 async function testConnection() {
@@ -24,9 +42,6 @@ async function testConnection() {
   }
 }
 
-// Automatically test connection when db is required
-testConnection();
-
 exports.query = async (text, params) => {
   const start = Date.now();
   try {
@@ -39,3 +54,5 @@ exports.query = async (text, params) => {
     throw error;
   }
 };
+
+exports.testConnection = testConnection;

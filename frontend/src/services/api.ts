@@ -16,6 +16,14 @@ export type Filters = {
   section_id?: string;
 };
 
+export type InternalExternalRecord = {
+  student_id: number;
+  student_name: string;
+  internal_percentage: number | null;
+  external_percentage: number | null;
+  gap: number | null;
+};
+
 export const analyticsService = {
   getFilterOptions: (params?: Filters) => api.get('/admin/filter-options', { params }),
   getCoPoMapping: (params?: Filters) => api.get('/co-po-mapping', { params }),
@@ -27,6 +35,7 @@ export const analyticsService = {
   getAdminInsights: (params?: Filters) => api.get('/admin/co-po-insights', { params }),
   getBatchMarks: (params?: Filters) => api.get('/batch-marks', { params }),
   getBatchAttendance: (params?: Filters) => api.get('/batch-attendance', { params }),
+  getInternalExternal: (params?: Filters) => api.get('/internal-external', { params }),
 };
 
 export default api;
