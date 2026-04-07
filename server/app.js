@@ -1,11 +1,11 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
 const analysisRoutes = require('./routes/index');
 const errorHandler = require('./middleware/errorHandler');
 
 
-const path = require('path');
 const app = express();
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());

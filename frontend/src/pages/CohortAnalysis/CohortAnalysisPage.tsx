@@ -10,8 +10,6 @@ export function CohortAnalysisPage() {
   const [filterOptions, setFilterOptions] = useState<any>({ regulations: [], subjects: [], batches: [] });
   
   const [loading, setLoading] = useState(false);
-  const [perfData, setPerfData] = useState<any>({});
-  const [attendanceData, setAttendanceData] = useState<any[]>([]);
   const [comparisonData, setComparisonData] = useState<any>({});
 
   useEffect(() => {
@@ -22,19 +20,7 @@ export function CohortAnalysisPage() {
     if (!filters.regulation_id || !filters.subject_id) return;
     setLoading(true);
     try {
-      const [perfRes, attRes, compRes] = await Promise.all([
-        analyticsService.getPerformance(filters),
-        analyticsService.getAttendance(filters),
-        analyticsService.getComparisons(filters)
-      ]);
-      setPerfData(perfRes.data || {});
-
-      const normalizedAttendanceData = Array.isArray(attRes.data)
-        ? attRes.data
-        : Array.isArray(attRes.data?.data)
-          ? attRes.data.data
-          : [];
-      setAttendanceData(normalizedAttendanceData);
+      const compRes = await analyticsService.getComparisons(filters);
 
       const normalizedComparisonData =
         compRes.data && typeof compRes.data === 'object'
@@ -50,26 +36,34 @@ export function CohortAnalysisPage() {
     }
   };
 
+  // Build histogram from performance data (marks distribution from class_wise/batch_wise averages)
+  // attendanceData is kept for attendance-specific charts if needed later.
   const histogram = useMemo(() => {
-    if (attendanceData.length === 0) return [];
+    // Use marks from perfData's distribution if available, otherwise derive from comparison data.
+    // perfData contains internal/external scores. Build buckets from the individual student marks
+    // stored in comparisonData (if enriched by the backend) or use available averages.
+    const classWise = comparisonData?.class_wise || {};
+    const batchWise = comparisonData?.batch_wise || {};
+    const source = Object.keys(classWise).length > 0 ? classWise : batchWise;
+    const values = Object.values(source).map(v => Number(v ?? 0)).filter(v => Number.isFinite(v) && v > 0);
+    if (values.length === 0) return [];
 
     const buckets: Record<string, number> = {
       '0-10': 0, '10-20': 0, '20-30': 0, '30-40': 0, '40-50': 0,
       '50-60': 0, '60-70': 0, '70-80': 0, '80-90': 0, '90-100': 0
     };
 
-    attendanceData.forEach((row: any) => {
-      const score = Number(row?.weighted_score ?? 0);
-      if (!Number.isFinite(score)) return;
+    values.forEach(score => {
       const normalized = Math.max(0, Math.min(100, score));
       const floor = Math.floor(normalized / 10) * 10;
       const start = floor === 100 ? 90 : floor;
-      const end = start + 10;
-      buckets[`${start}-${end}`] += 1;
+      buckets[`${start}-${start + 10}`] += 1;
     });
 
-    return Object.entries(buckets).map(([bucket, count]) => ({ bucket, count }));
-  }, [attendanceData]);
+    return Object.entries(buckets)
+      .filter(([, count]) => count > 0)
+      .map(([bucket, count]) => ({ bucket, count }));
+  }, [comparisonData]);
 
   const scatterPlot = useMemo(() => {
     const avp = comparisonData?.attendance_vs_performance || {};
@@ -116,11 +110,14 @@ export function CohortAnalysisPage() {
   }, [comparisonData]);
 
   const avgScore = useMemo(() => {
-    const internal = Number(perfData?.internal_score ?? 0);
-    const external = Number(perfData?.external_score ?? 0);
-    if (internal <= 0 && external <= 0) return 0;
-    return (internal + external) / 2;
-  }, [perfData]);
+    // Use the batch_wise or class_wise average scores for overall avg
+    const source = filters.batch_id
+      ? (comparisonData?.class_wise || {})
+      : (comparisonData?.batch_wise || {});
+    const values = Object.values(source).map(v => Number(v ?? 0)).filter(v => Number.isFinite(v) && v > 0);
+    if (values.length === 0) return 0;
+    return values.reduce((sum, v) => sum + v, 0) / values.length;
+  }, [comparisonData, filters.batch_id]);
 
   const peakScore = useMemo(() => {
     const compareSource = filters.batch_id ? comparisonData?.class_wise : comparisonData?.batch_wise;
@@ -129,13 +126,20 @@ export function CohortAnalysisPage() {
   }, [comparisonData, filters.batch_id]);
 
   const failCount = useMemo(() => {
-    return attendanceData.filter((row) => Number(row?.weighted_score ?? 0) < 50).length;
-  }, [attendanceData]);
+    const classWise = comparisonData?.class_wise || {};
+    const batchWise = comparisonData?.batch_wise || {};
+    const source = Object.keys(classWise).length > 0 ? classWise : batchWise;
+    return Object.values(source).filter(v => Number(v ?? 0) < 50).length;
+  }, [comparisonData]);
 
   const failPercentage = useMemo(() => {
-    if (attendanceData.length === 0) return 0;
-    return (failCount / attendanceData.length) * 100;
-  }, [attendanceData, failCount]);
+    const classWise = comparisonData?.class_wise || {};
+    const batchWise = comparisonData?.batch_wise || {};
+    const source = Object.keys(classWise).length > 0 ? classWise : batchWise;
+    const total = Object.keys(source).length;
+    if (total === 0) return 0;
+    return (failCount / total) * 100;
+  }, [comparisonData, failCount]);
 
   const scopeLabel = filters.batch_id ? `Batch ${filters.batch_id}` : 'All Batches (Overall EDA)';
 

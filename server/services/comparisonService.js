@@ -4,7 +4,8 @@ const { generateComparison } = require('../../analysis/comparisons/comparison');
 exports.calculateComparison = async (params) => {
   const { offering_id, subject_id, batch_id, regulation_id, teacher_id, section_id } = params || {};
   
-  // Base massive cross-relational pull
+  // Key fix: join via student.section_id to get the student's actual section,
+  // not the offering's section_id (which is always one section per exam).
   let q = `
     SELECT 
         scm.student_id,
@@ -12,16 +13,17 @@ exports.calculateComparison = async (params) => {
         e.max_marks,
         ec.type AS exam_type,
         sa.attendance_percentage,
-        so.section_id,
+        st.section_id,
         sec.name AS section_name,
         so.teacher_id,
-        so.batch_id,
+        sec.batch_id,
         so.regulation_id
     FROM student_component_marks scm
     JOIN exam e ON scm.exam_id = e.exam_id
     JOIN evaluation_component ec ON e.component_id = ec.component_id
     JOIN subject_offering so ON e.offering_id = so.offering_id
-    LEFT JOIN section sec ON so.section_id = sec.section_id
+    JOIN student st ON scm.student_id = st.student_id
+    JOIN section sec ON st.section_id = sec.section_id
     LEFT JOIN student_attendance sa 
         ON scm.student_id = sa.student_id 
         AND so.offering_id = sa.offering_id 
@@ -42,7 +44,7 @@ exports.calculateComparison = async (params) => {
   }
   if (batch_id) {
     queryParams.push(batch_id);
-    q += ` AND so.batch_id = $${queryParams.length}`;
+    q += ` AND sec.batch_id = $${queryParams.length}`;
   }
   if (regulation_id) {
     queryParams.push(regulation_id);
@@ -54,7 +56,7 @@ exports.calculateComparison = async (params) => {
   }
   if (section_id) {
     queryParams.push(section_id);
-    q += ` AND so.section_id = $${queryParams.length}`;
+    q += ` AND st.section_id = $${queryParams.length}`;
   }
 
   // Fetch structural array and ship to map/reducer

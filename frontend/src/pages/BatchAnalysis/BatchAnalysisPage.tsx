@@ -47,12 +47,13 @@ export function BatchAnalysisPage() {
     }
   };
 
-  // Sorted batch IDs
+  // Sorted batch IDs — always derived from marksData (the primary loaded source).
+  // Switching tabs must NOT reset batchIds, otherwise the UI falsely shows "no data".
   const batchIds = useMemo(() => {
-    const source = activeTab === 'marks' ? marksData?.batches : attendanceData?.batches;
+    const source = marksData?.batches;
     if (!source) return [];
     return Object.keys(source).sort((a, b) => Number(a) - Number(b));
-  }, [activeTab, marksData, attendanceData]);
+  }, [marksData]);
 
   // Scope label
   const scopeLabel = filters.batch_id
@@ -76,11 +77,11 @@ export function BatchAnalysisPage() {
     }
     if (activeTab === 'attendance' && attendanceData) {
       let totalStudents = 0, totalBelow75 = 0, totalAttSum = 0, sectionCount = 0;
-      for (const batchObj of Object.values(attendanceData.batches)) {
-        for (const sec of Object.values(batchObj.sections)) {
-          totalStudents += sec.student_count;
-          totalBelow75 += sec.below_75_count;
-          if (sec.student_count > 0) { totalAttSum += sec.avg_attendance; sectionCount++; }
+      for (const batchObj of Object.values(attendanceData.batches ?? {})) {
+        for (const sec of Object.values(batchObj?.sections ?? {})) {
+          totalStudents += sec.student_count ?? 0;
+          totalBelow75 += sec.below_75_count ?? 0;
+          if (sec.student_count > 0) { totalAttSum += sec.avg_attendance ?? 0; sectionCount++; }
         }
       }
       const overallAvg = sectionCount > 0 ? totalAttSum / sectionCount : 0;
@@ -205,6 +206,7 @@ export function BatchAnalysisPage() {
       {/* Marks tab */}
       {!loading && hasData && activeTab === 'marks' && marksData && batchIds.map(batchId => {
         const batchObj = marksData.batches[batchId];
+        if (!batchObj?.sections) return null; // guard: batch exists in batchIds but not in marksData
         const sectionNames = SECTION_ORDER.filter(s => s in batchObj.sections);
 
         return (
@@ -241,8 +243,30 @@ export function BatchAnalysisPage() {
       })}
 
       {/* Attendance tab */}
-      {!loading && hasData && activeTab === 'attendance' && attendanceData && batchIds.map(batchId => {
-        const batchObj = attendanceData.batches[batchId];
+      {!loading && hasData && activeTab === 'attendance' && batchIds.map(batchId => {
+        const batchObj = attendanceData?.batches?.[batchId];
+        if (!batchObj?.sections) {
+          // Batch exists in marks data but not in attendance data — show a placeholder row
+          return (
+            <div key={batchId} className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary text-base">groups</span>
+                </div>
+                <h2 className="text-lg font-bold text-on-surface">Batch {batchId}</h2>
+                <div className="flex-1 h-px bg-outline/10" />
+                <span className="text-xs text-on-surface-variant">No attendance data</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {SECTION_ORDER.map(sec => (
+                  <div key={`${batchId}-${sec}-empty`} className="rounded-2xl border-dashed border-2 border-outline/20 flex items-center justify-center p-8 text-on-surface-variant text-sm opacity-50">
+                    Section {sec} — No attendance data
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
         const sectionNames = SECTION_ORDER.filter(s => s in batchObj.sections);
 
         return (
