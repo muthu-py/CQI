@@ -4,75 +4,105 @@ const poAttainmentService = require('../services/poAttainmentService');
 const attendanceService = require('../services/attendanceService');
 const teacherService = require('../services/teacherService');
 const comparisonService = require('../services/comparisonService');
+const coPoMappingService = require('../services/coPoMappingService');
+const adminInsightsService = require('../services/adminInsightsService');
+const batchAnalysisService = require('../services/batchAnalysisService');
 
-exports.getPerformance = async (req, res) => {
+exports.getPerformance = async (req, res, next) => {
   try {
-    const data = await performanceService.calculatePerformance(req.query);
+    const data = await performanceService.calculatePerformance(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getCoAttainment = async (req, res) => {
+exports.getCoAttainment = async (req, res, next) => {
   try {
-    const data = await coAttainmentService.calculateCoAttainment(req.query);
+    const data = await coAttainmentService.calculateCoAttainment(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getPoAttainment = async (req, res) => {
+exports.getPoAttainment = async (req, res, next) => {
   try {
-    const data = await poAttainmentService.calculatePoAttainment(req.query);
+    const data = await poAttainmentService.calculatePoAttainment(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getAttendance = async (req, res) => {
+exports.getAttendance = async (req, res, next) => {
   try {
-    const data = await attendanceService.calculateAttendance(req.query);
+    const data = await attendanceService.calculateAttendance(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getTeacher = async (req, res) => {
+exports.getTeacher = async (req, res, next) => {
   try {
-    const data = await teacherService.calculateTeacherPerformance(req.query);
+    const data = await teacherService.calculateTeacherPerformance(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getComparison = async (req, res) => {
+exports.getComparison = async (req, res, next) => {
   try {
-    const data = await comparisonService.calculateComparison(req.query);
+    const data = await comparisonService.calculateComparison(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getDesiredCoPo = async (req, res) => {
+exports.getCoPoMapping = async (req, res, next) => {
   try {
-    const data = await poAttainmentService.fetchDesiredCoPo(req.query);
+    const data = await coPoMappingService.getSubjectCoPoMappings(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getAchievedCoPo = async (req, res) => {
+exports.getAdminFilterOptions = async (req, res, next) => {
   try {
-    const data = await poAttainmentService.fetchAchievedQuestionCoPo(req.query);
+    const data = await adminInsightsService.getFilterOptions(req.normalizedFilters || req.query);
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
+  }
+};
+
+exports.getCoPoInsights = async (req, res, next) => {
+  try {
+    const data = await adminInsightsService.getCoPoInsights(req.normalizedFilters || req.query);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getBatchMarks = async (req, res, next) => {
+  try {
+    const data = await batchAnalysisService.getBatchMarksAnalysis(req.normalizedFilters || req.query);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getBatchAttendance = async (req, res, next) => {
+  try {
+    const data = await batchAnalysisService.getBatchAttendanceAnalysis(req.normalizedFilters || req.query);
+    res.json(data);
+  } catch (error) {
+    next(error);
   }
 };

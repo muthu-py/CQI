@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cqi.v1.admin-filter-options",
+  "type": "object",
+  "required": ["contract_version", "regulations", "subjects", "batches"],
+  "properties": {
+    "contract_version": { "const": "cqi.v1" },
+    "regulations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["regulation_id", "label"],
+        "properties": {
+          "regulation_id": { "type": "integer" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["subject_id", "subject_name"],
+        "properties": {
+          "subject_id": { "type": "integer" },
+          "subject_name": { "type": "string" }
+        }
+      }
+    },
+    "batches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["batch_id"],
+        "properties": {
+          "batch_id": { "type": "integer" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

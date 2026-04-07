@@ -1,8 +1,7 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false } // Required for Supabase direct connections
+  connectionString: process.env.supabaseUrl || process.env.DATABASE_URL
 });
 
 async function testConnection() {
@@ -13,7 +12,7 @@ async function testConnection() {
       FROM information_schema.tables 
       WHERE table_schema = 'public'
     `);
-    
+
     console.log("✅ Successfully connected to Postgres on Supabase!");
     console.log("📊 Available Tables:");
     const tables = res.rows.map(row => row.table_name);

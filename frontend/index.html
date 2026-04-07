@@ -1,164 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CO-PO Mapping Analytics</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-    .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); }
-    /* Classic grid styling for the matrix table */
-    .matrix-table { width: 100%; border-collapse: collapse; }
-    .matrix-table th, .matrix-table td { border: 1px solid #cbd5e1; text-align: center; padding: 0.5rem; }
-    .matrix-table th { background-color: #f1f5f9; font-weight: bold; color: #475569; }
-    /* Light border for dual desired vs achieved data */
-    .val-desired { font-weight: 700; color: #334155; }
-    .val-achieved { font-size: 0.8rem; color: #4f46e5; margin-top: 2px; }
-    .val-miss { color: #e11d48; margin-top: 2px; }
-  </style>
-</head>
-<body class="p-8">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CQI Console Dashboard</title>
+    <!-- Google Fonts: Manrope & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
-  <div class="max-w-7xl mx-auto">
-    <header class="mb-8 flex justify-between items-end border-b pb-4">
-      <div>
-        <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">CO-PO Alignment Matrices</h1>
-        <p class="text-gray-500 mt-2">Displaying Desired curriculum weights with (Achieved) weights in blue.</p>
-      </div>
-      <button onclick="fetchMappings()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200 shadow-md">
-        Fetch Matrices
-      </button>
-    </header>
-
-    <div id="matrices-container" class="grid grid-cols-1 gap-12">
-      <div class="text-center text-gray-500 p-12 border-2 border-dashed rounded-xl">
-        Click 'Fetch Matrices' to build tables from database...
-      </div>
-    </div>
-  </div>
-
-  <script>
-    async function fetchMappings() {
-      const container = document.getElementById('matrices-container');
-      container.innerHTML = '<div class="text-center text-gray-400 animate-pulse py-12">Generating matrices...</div>';
-
-      try {
-        const [resDesired, resAchieved] = await Promise.all([
-          fetch('/analysis/copo/desired'),
-          fetch('/analysis/copo/achieved')
-        ]);
-
-        const desiredData = await resDesired.json();
-        const achievedData = await resAchieved.json();
-
-        // Index the achieved map by REG-SUB-CO-PO
-        const achievedMap = {};
-        achievedData.forEach(item => {
-          const key = `R${item.regulation_id}-S${item.subject_id}-C${item.co_number}-P${item.po_id}`;
-          achievedMap[key] = item.attainment;
-        });
-
-        // Group desired data into subjects
-        const groups = {};
-        desiredData.forEach(item => {
-          const groupKey = `R${item.regulation_id}-S${item.subject_id}`;
-          if (!groups[groupKey]) {
-            groups[groupKey] = {
-              regulation_id: item.regulation_id,
-              start_year: item.start_year,
-              subject_id: item.subject_id,
-              subject_name: item.subject_name || `Subject #${item.subject_id}`,
-              cos: new Set(),
-              matrix: {} // matrix[co_number][po_id] = desired
-            };
-          }
-          groups[groupKey].cos.add(item.co_number);
-          
-          if (!groups[groupKey].matrix[item.co_number]) {
-            groups[groupKey].matrix[item.co_number] = {};
-          }
-          groups[groupKey].matrix[item.co_number][item.po_id] = item.attainment;
-        });
-
-        container.innerHTML = '';
-        
-        if (Object.keys(groups).length === 0) {
-           container.innerHTML = '<div class="p-8 text-center text-red-500 font-bold border rounded-lg">No mapping data found in database.</div>';
-           return;
-        }
-
-        // Render each subject's matrix
-        const totalPOs = 12; // Standard PO 1 to 12 as per image
-        
-        for (const [groupKey, group] of Object.entries(groups)) {
-          // Identify dynamically how many COs exist for this subject
-          const sortedCOs = Array.from(group.cos).sort((a,b) => a - b);
-          
-          let tableHtml = `
-            <div class="glass shadow-lg rounded-xl overflow-hidden border border-gray-200">
-               <div class="bg-indigo-50 border-b border-indigo-100 px-6 py-4">
-                <h2 class="text-xl font-bold text-indigo-900">${group.subject_name}</h2>
-                <div class="text-sm font-medium text-indigo-500 mt-1">
-                  Regulation: <span class="font-bold text-indigo-700">${group.regulation_id}</span>
-                </div>
-              </div>
-              <div class="p-6 bg-white overflow-x-auto">
-                <table class="matrix-table text-sm">
-                  <thead>
-                    <tr>
-                      <th rowspan="2" class="w-20 text-lg">COs</th>
-                      <th colspan="${totalPOs}" class="text-lg tracking-wider">POs</th>
-                    </tr>
-                    <tr>
-                      ${Array.from({length: totalPOs}, (_, i) => `<th class="w-12">${i + 1}</th>`).join('')}
-                    </tr>
-                  </thead>
-                  <tbody>
-          `;
-
-          // Fill Matrix Rows
-          sortedCOs.forEach(co_number => {
-            let rowHtml = `<tr><th class="bg-gray-50 uppercase tracking-wide border-r border-gray-200">${co_number}</th>`;
-            for (let po_id = 1; po_id <= totalPOs; po_id++) {
-              const desired = group.matrix[co_number][po_id];
-              const achKey = `R${group.regulation_id}-S${group.subject_id}-C${co_number}-P${po_id}`;
-              const achieved = achievedMap[achKey];
-              
-              if (desired !== undefined) {
-                 // Format: Desired with (Achieved) if achieved is available
-                 let achievedHtml = '';
-                 if (achieved !== undefined) {
-                    const diff = achieved - desired;
-                    const achColor = diff < 0 ? 'val-miss' : 'val-achieved';
-                    achievedHtml = `<div class="${achColor}">(${achieved.toFixed(2)})</div>`;
-                 }
-                 rowHtml += `<td><div class="val-desired">${desired}</div>${achievedHtml}</td>`;
-              } else {
-                 // Empty mapping
-                 rowHtml += `<td></td>`;
-              }
-            }
-            rowHtml += `</tr>`;
-            tableHtml += rowHtml;
-          });
-
-          tableHtml += `
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          `;
-          
-          container.innerHTML += tableHtml;
-        }
-
-      } catch (err) {
-        container.innerHTML = `<div class="p-8 text-center text-red-500 border rounded">Error loading matrices: ${err.message}</div>`;
-      }
-    }
-    
-    document.addEventListener("DOMContentLoaded", fetchMappings);
-  </script>
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Subject Analysis | CQI Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#dbe1ff",
+                        "on-background": "#2a3439",
+                        "primary-dim": "#0048c1",
+                        "on-error": "#fff7f6",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#0b0f10",
+                        "on-tertiary-fixed": "#393c55",
+                        "outline": "#717c82",
+                        "on-secondary-fixed-variant": "#4d5d73",
+                        "on-tertiary-container": "#4b4e69",
+                        "tertiary-container": "#dcddfe",
+                        "surface-container-highest": "#d9e4ea",
+                        "on-tertiary-fixed-variant": "#555873",
+                        "on-secondary": "#f7f9ff",
+                        "error": "#9f403d",
+                        "secondary-fixed-dim": "#c5d6f0",
+                        "on-tertiary": "#fbf8ff",
+                        "surface-tint": "#0053db",
+                        "secondary-container": "#d3e4fe",
+                        "surface-container": "#e8eff3",
+                        "secondary": "#506076",
+                        "tertiary": "#5b5d78",
+                        "tertiary-dim": "#4f516c",
+                        "surface-container-low": "#f0f4f7",
+                        "primary-fixed-dim": "#c7d3ff",
+                        "outline-variant": "#a9b4b9",
+                        "inverse-on-surface": "#9a9d9f",
+                        "secondary-fixed": "#d3e4fe",
+                        "surface-bright": "#f7f9fb",
+                        "surface-variant": "#d9e4ea",
+                        "on-secondary-container": "#435368",
+                        "on-secondary-fixed": "#314055",
+                        "on-primary-fixed": "#003798",
+                        "tertiary-fixed": "#dcddfe",
+                        "on-error-container": "#752121",
+                        "error-container": "#fe8983",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface": "#2a3439",
+                        "on-surface-variant": "#566166",
+                        "surface": "#f7f9fb",
+                        "primary": "#0053db",
+                        "on-primary-fixed-variant": "#0050d4",
+                        "secondary-dim": "#44546a",
+                        "on-primary": "#f8f7ff",
+                        "tertiary-fixed-dim": "#cecfef",
+                        "surface-dim": "#cfdce3",
+                        "background": "#f7f9fb",
+                        "on-primary-container": "#0048bf",
+                        "error-dim": "#4e0309",
+                        "inverse-primary": "#618bff",
+                        "surface-container-high": "#e1e9ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex min-h-screen">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="hidden lg:flex flex-col h-screen sticky top-0 p-4 gap-4 bg-slate-100 dark:bg-slate-900 h-screen w-64 border-r-0 font-manrope text-sm font-medium">
+<div class="flex items-center gap-3 px-2 mb-6">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-slate-900 dark:text-slate-100 leading-none">CQI Portfolio</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Intellectual Atelier</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active Tab: Subject Analysis -->
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-400 rounded-lg shadow-sm scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Subject Analysis</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Cohort Analysis</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+</div>
+<button class="mt-4 w-full py-3 px-4 bg-primary text-white rounded-xl font-semibold shadow-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+            Download Report
+        </button>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 min-w-0 flex flex-col">
+<!-- TopNavBar (Authority: JSON) -->
+<header class="sticky top-0 z-50 flex justify-between items-center w-full px-6 py-3 bg-slate-50 dark:bg-slate-950 font-manrope antialiased">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50">CQI Analytics</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 text-sm font-semibold" href="#">Subject Analysis</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-sm font-medium" href="#">Cohort Analysis</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-100 dark:bg-slate-900 border-none rounded-full text-xs w-64 focus:ring-2 ring-primary/20" placeholder="Search analytics..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 space-y-8 max-w-7xl mx-auto w-full">
+<!-- Filter Panel -->
+<section class="bg-surface-container-low p-5 rounded-xl flex flex-wrap gap-6 items-end">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Regulation</label>
+<select class="block w-40 bg-surface-container-lowest border-none rounded-lg text-sm focus:ring-primary/20">
+<option>R2021 (Autonomous)</option>
+<option>R2018 (VTU)</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Academic Batch</label>
+<select class="block w-40 bg-surface-container-lowest border-none rounded-lg text-sm focus:ring-primary/20">
+<option>2020 - 2024</option>
+<option>2021 - 2025</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Subject Code</label>
+<select class="block w-56 bg-surface-container-lowest border-none rounded-lg text-sm focus:ring-primary/20">
+<option>CS801 - Machine Learning</option>
+<option>CS802 - Data Mining</option>
+</select>
+</div>
+<button class="ml-auto px-6 py-2 bg-gradient-to-br from-primary to-primary-dim text-white rounded-lg font-medium shadow-sm hover:opacity-95">
+                    Generate Analysis
+                </button>
+</section>
+<!-- Section 1: CO-PO Definition & Mapping -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- CO List -->
+<div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="description">description</span>
+                        Course Outcomes (CO)
+                    </h3>
+<div class="space-y-4">
+<div class="p-3 bg-surface rounded-lg">
+<span class="text-xs font-bold text-primary block mb-1">CO1</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Understand fundamental concepts of ML algorithms and their paradigms.</p>
+</div>
+<div class="p-3 bg-surface rounded-lg">
+<span class="text-xs font-bold text-primary block mb-1">CO2</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Analyze various supervised learning techniques for classification.</p>
+</div>
+<div class="p-3 bg-surface rounded-lg">
+<span class="text-xs font-bold text-primary block mb-1">CO3</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Implement clustering algorithms for unsupervised learning problems.</p>
+</div>
+<div class="p-3 bg-surface rounded-lg opacity-60">
+<span class="text-xs font-bold text-slate-400 block mb-1">CO4 - CO6</span>
+<p class="text-sm italic">Additional definitions available in syllabus... </p>
+</div>
+</div>
+</div>
+<!-- CO-PO Mapping Table -->
+<div class="xl:col-span-2 bg-surface-container-lowest p-6 rounded-xl relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="grid_view">grid_view</span>
+                            CO-PO Mapping Matrix
+                        </h3>
+<div class="flex gap-4 text-[10px] font-bold">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-100"></span> 1 - Slight</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-300"></span> 2 - Moderate</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-600"></span> 3 - Substantial</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-center border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold rounded-tl-lg">Outcome</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold">PO1</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold">PO2</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold">PO3</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold">PO4</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold">PO5</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold">PO6</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold text-slate-400">...</th>
+<th class="py-3 px-2 text-[10px] uppercase text-on-surface-variant font-bold rounded-tr-lg">PO12</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr>
+<td class="py-4 font-bold text-sm text-primary">CO1</td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-md font-bold text-xs">3</div></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-300 text-on-secondary-container rounded-md font-bold text-xs">2</div></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-700 rounded-md font-bold text-xs">1</div></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-700 rounded-md font-bold text-xs">1</div></td>
+</tr>
+<tr class="bg-surface">
+<td class="py-4 font-bold text-sm text-primary">CO2</td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-md font-bold text-xs">3</div></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-md font-bold text-xs">3</div></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-300 text-on-secondary-container rounded-md font-bold text-xs">2</div></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+</tr>
+<tr>
+<td class="py-4 font-bold text-sm text-primary">CO3</td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-300 text-on-secondary-container rounded-md font-bold text-xs">2</div></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-md font-bold text-xs">3</div></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-md font-bold text-xs">3</div></td>
+<td class="py-4"><div class="mx-auto w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-700 rounded-md font-bold text-xs">1</div></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+<td class="py-4"><span class="text-slate-300">-</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Section 2 & 3: Attainment Visuals -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- CO Attainment Chart -->
+<div class="bg-surface-container-lowest p-6 rounded-xl">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="text-lg font-bold">CO-wise Attainment</h3>
+<p class="text-xs text-on-surface-variant">Percentage of targets achieved per Course Outcome</p>
+</div>
+<span class="text-2xl font-black text-primary">82% <span class="text-[10px] text-on-surface-variant font-medium">AVG</span></span>
+</div>
+<div class="h-64 flex items-end gap-6 px-4">
+<!-- Chart Bar 1 -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="relative w-full bg-slate-100 rounded-t-lg overflow-hidden h-[90%]">
+<div class="absolute bottom-0 w-full bg-primary h-[90%] group-hover:opacity-80 transition-all"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">90%</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">CO1</span>
+</div>
+<!-- Chart Bar 2 -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="relative w-full bg-slate-100 rounded-t-lg overflow-hidden h-[75%]">
+<div class="absolute bottom-0 w-full bg-primary h-[75%] group-hover:opacity-80 transition-all"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">CO2</span>
+</div>
+<!-- Chart Bar 3 (Weak) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="relative w-full bg-red-50 rounded-t-lg overflow-hidden h-[45%]">
+<div class="absolute bottom-0 w-full bg-error h-[45%] group-hover:opacity-80 transition-all"></div>
+</div>
+<span class="text-xs font-bold text-error">CO3</span>
+</div>
+<!-- Chart Bar 4 -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="relative w-full bg-slate-100 rounded-t-lg overflow-hidden h-[85%]">
+<div class="absolute bottom-0 w-full bg-primary h-[85%] group-hover:opacity-80 transition-all"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">CO4</span>
+</div>
+<!-- Chart Bar 5 -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<div class="relative w-full bg-slate-100 rounded-t-lg overflow-hidden h-[95%]">
+<div class="absolute bottom-0 w-full bg-primary h-[95%] group-hover:opacity-80 transition-all"></div>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">CO5</span>
+</div>
+</div>
+</div>
+<!-- PO Attainment Chart -->
+<div class="bg-surface-container-lowest p-6 rounded-xl">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="text-lg font-bold">PO-wise Attainment</h3>
+<p class="text-xs text-on-surface-variant">Direct attainment mapped to Program Outcomes</p>
+</div>
+<div class="flex -space-x-2">
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="professional male headshot for academic faculty profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALvUtAeSYONRqJtqC7GxbDOYIhWzBr3EgxkNl8LvVFDQzqLxYkiIP41WUPtfc0Yp3Zsu9EXNhA48WRUP9Ei56KK3W-4akvJyFKjWLZ2ag0Knb3Nki_osTnJIkpY4jRSQsvm7TlEZdxkf_ahjd6F0BKdfxTTUSKJQGKy-O6QQC4LVsaIuphRyJ7hv1jTAbOG8Ti6kDn8nJEB8cIVa0zyJsOvn-SOlmdssINVAHrXviITXS6bHSXgL5Pmy7sv0KHAAnrK1xbGnUhRNgH"/>
+<img class="w-8 h-8 rounded-full border-2 border-white" data-alt="professional female headshot for academic faculty profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr_gnvDFlIbiljHO__aobZg32Lc8wfBzHpFXz8RX_wystrSmxwHUHI3G8OPsoH8-dqgnUkhiat-zgibD1Z1MDRJuGSrZI9GQCNuCcoDuNegwhuIr9O5Uh9v_dT5YChnoEObuVwwmqjxVPabODeuf_qsVzDhD-Ax2lStoKBvEVDA5Dke18_pJg00ibBuCdnjLAcPUxSZwgzd1sTqakfCArzEvBwMUrMOnIvk-VE5hKzPwd96nQPgYFvv_HAHRt7HDzqBo1kDF1QQ5zE"/>
+</div>
+</div>
+<div class="space-y-5">
+<!-- PO Bar 1 -->
+<div>
+<div class="flex justify-between text-[10px] font-bold uppercase mb-1">
+<span>PO1: Engineering Knowledge</span>
+<span class="text-primary">88%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[88%]"></div>
+</div>
+</div>
+<!-- PO Bar 2 -->
+<div>
+<div class="flex justify-between text-[10px] font-bold uppercase mb-1">
+<span>PO2: Problem Analysis</span>
+<span class="text-primary">74%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[74%]"></div>
+</div>
+</div>
+<!-- PO Bar 3 -->
+<div>
+<div class="flex justify-between text-[10px] font-bold uppercase mb-1">
+<span>PO3: Design/Development</span>
+<span class="text-primary">62%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[62%]"></div>
+</div>
+</div>
+<!-- PO Bar 4 -->
+<div>
+<div class="flex justify-between text-[10px] font-bold uppercase mb-1">
+<span>PO5: Modern Tool Usage</span>
+<span class="text-primary">91%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[91%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 4: Insight Panel -->
+<section class="glass-panel p-8 rounded-2xl border border-white/20 shadow-xl">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 bg-secondary-container rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="lightbulb">lightbulb</span>
+</div>
+<div>
+<h2 class="text-xl font-extrabold tracking-tight">Curated Insights</h2>
+<p class="text-sm text-on-surface-variant font-medium">Strategic recommendations based on data trends</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Insight Card 1 -->
+<div class="bg-white/40 p-6 rounded-xl border border-white/40 hover:bg-white/60 transition-colors">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<span class="text-[10px] font-black uppercase text-error tracking-widest">Weak CO Detected</span>
+</div>
+<h4 class="font-bold text-on-surface mb-2">CO3: Clustering Algorithms</h4>
+<p class="text-sm text-on-surface-variant mb-4 leading-relaxed">
+<span class="font-bold block text-xs mb-1">REASON</span>
+                            High failure rate in Semester End Examination (SEE) for Section B (Practical Applications).
+                        </p>
+<div class="pt-4 border-t border-slate-200/50">
+<p class="text-sm text-on-surface-variant">
+<span class="font-bold block text-xs mb-1">IMPROVEMENT</span>
+                                Schedule mandatory remedial lab sessions and focused tutorials for k-means implementation.
+                            </p>
+</div>
+</div>
+<!-- Insight Card 2 -->
+<div class="bg-white/40 p-6 rounded-xl border border-white/40 hover:bg-white/60 transition-colors">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+<span class="text-[10px] font-black uppercase text-primary tracking-widest">Strength Identified</span>
+</div>
+<h4 class="font-bold text-on-surface mb-2">PO5: Modern Tool Usage</h4>
+<p class="text-sm text-on-surface-variant mb-4 leading-relaxed">
+<span class="font-bold block text-xs mb-1">REASON</span>
+                            91% attainment driven by successful integration of Scikit-Learn in continuous evaluation.
+                        </p>
+<div class="pt-4 border-t border-slate-200/50">
+<p class="text-sm text-on-surface-variant">
+<span class="font-bold block text-xs mb-1">IMPROVEMENT</span>
+                                Introduce advanced Pytorch frameworks in the next elective cycle to maintain momentum.
+                            </p>
+</div>
+</div>
+<!-- Insight Card 3 -->
+<div class="bg-white/40 p-6 rounded-xl border border-white/40 hover:bg-white/60 transition-colors">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary" data-icon="info">info</span>
+<span class="text-[10px] font-black uppercase text-secondary tracking-widest">Mapping Alert</span>
+</div>
+<h4 class="font-bold text-on-surface mb-2">PO3 Threshold Gap</h4>
+<p class="text-sm text-on-surface-variant mb-4 leading-relaxed">
+<span class="font-bold block text-xs mb-1">REASON</span>
+                            Target (70%) was not met for Design-based outcomes in terminal project assessment.
+                        </p>
+<div class="pt-4 border-t border-slate-200/50">
+<p class="text-sm text-on-surface-variant">
+<span class="font-bold block text-xs mb-1">IMPROVEMENT</span>
+                                Refine mapping weights for CO3-PO3 or enhance project rubric criteria.
+                            </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Decorative Element -->
+<footer class="mt-auto p-8 flex justify-center opacity-40">
+<div class="flex items-center gap-4 text-[10px] font-bold tracking-[0.2em] uppercase text-on-surface-variant">
+<span>Data Integrity Verified</span>
+<span class="w-1 h-1 bg-on-surface-variant rounded-full"></span>
+<span>Academic Audit 2024</span>
+<span class="w-1 h-1 bg-on-surface-variant rounded-full"></span>
+<span>Confidential</span>
+</div>
+</footer>
+</main>
+</body></html>

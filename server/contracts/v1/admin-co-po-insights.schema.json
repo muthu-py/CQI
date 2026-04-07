@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cqi.v1.admin-co-po-insights",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "scope",
+    "planned",
+    "achieved",
+    "exam_type_breakdown",
+    "batch_trend",
+    "merged",
+    "recommendations"
+  ],
+  "properties": {
+    "contract_version": { "const": "cqi.v1" },
+    "scope": {
+      "type": "object",
+      "required": ["regulation_id", "subject_id", "subject_name", "batch_id", "mode"],
+      "properties": {
+        "regulation_id": { "type": ["integer", "null"] },
+        "subject_id": { "type": ["integer", "null"] },
+        "subject_name": { "type": ["string", "null"] },
+        "batch_id": { "type": ["integer", "null"] },
+        "mode": { "enum": ["single_batch", "three_batch"] }
+      }
+    },
+    "planned": { "type": "array" },
+    "achieved": { "type": "array" },
+    "exam_type_breakdown": { "type": "array" },
+    "batch_trend": { "type": "array" },
+    "merged": { "type": "array" },
+    "recommendations": { "type": "array" }
+  },
+  "additionalProperties": false
+}
