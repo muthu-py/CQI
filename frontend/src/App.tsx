@@ -6,6 +6,7 @@ import { CohortAnalysisPage } from './pages/CohortAnalysis/CohortAnalysisPage';
 import { BatchAnalysisPage } from './pages/BatchAnalysis/BatchAnalysisPage';
 import { LoginPage } from './pages/LoginPage';
 import { TeacherAnalysisPage } from './pages/TeacherAnalysis/TeacherAnalysisPage';
+import { InternalExternalPage } from './pages/InternalExternal/InternalExternalPage';
 
 export default function App() {
   return (
@@ -15,10 +16,12 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route element={<RequireAuth />}>
           <Route element={<DashboardLayout />}>
+            <Route index element={<Navigate to="/subject" replace />} />
             <Route path="/subject" element={<SubjectAnalysisPage />} />
             <Route path="/cohort" element={<CohortAnalysisPage />} />
             <Route path="/batch" element={<BatchAnalysisPage />} />
             <Route path="/teacher" element={<TeacherAnalysisPage />} />
+            <Route path="/internal-external" element={<InternalExternalPage />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -26,3 +29,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+

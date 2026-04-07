@@ -18,5 +18,8 @@ router.get('/admin/filter-options', analysisController.getAdminFilterOptions);
 router.get('/admin/co-po-insights', analysisController.getCoPoInsights);
 router.get('/batch-marks', analysisController.getBatchMarks);
 router.get('/batch-attendance', analysisController.getBatchAttendance);
+router.get('/internal-external', analysisController.getInternalExternalComparison);
+router.get('/internal/:offering_id', analysisController.getInternalMarks);
+router.get('/external/:offering_id', analysisController.getExternalMarks);
 
 module.exports = router;

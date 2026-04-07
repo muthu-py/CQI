@@ -9,7 +9,15 @@ const adminDataRoutes = require('./routes/adminDataRoutes');
 const authenticateAdmin = require('./middleware/authenticateAdmin');
 const { bootstrapAuthStorage } = require('./services/adminAuthService');
 const errorHandler = require('./middleware/errorHandler');
+const db = require('./db');
 
+// ── Prevent unhandled rejections / exceptions from crashing the process ──────
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[unhandledRejection]', promise, 'reason:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[uncaughtException]', err);
+});
 
 const app = express();
 app.use(cors()); // Enable CORS for all routes
@@ -20,19 +28,77 @@ app.use('/auth', authRoutes);
 app.use('/analysis', authenticateAdmin, analysisRoutes);
 app.use('/analysis/attendance-metrics', authenticateAdmin, attendanceMetricsRoutes);
 app.use('/admin/data', authenticateAdmin, adminDataRoutes);
+app.use('/analytics', authenticateAdmin, analysisRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
+const RUN_DB_STARTUP_CHECK = process.env.DB_STARTUP_CHECK === 'true';
+let server = null;
+let keepAliveTimer = null;
+let isShuttingDown = false;
 
-bootstrapAuthStorage()
-  .then(() => {
-    app.listen(PORT, () => {
+function stopKeepAliveTimer() {
+  if (keepAliveTimer) {
+    clearInterval(keepAliveTimer);
+    keepAliveTimer = null;
+  }
+}
+
+function shutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
+  console.log(`Received ${signal}. Closing HTTP server...`);
+  stopKeepAliveTimer();
+
+  if (!server || !server.listening) {
+    process.exit(0);
+    return;
+  }
+
+  server.close((err) => {
+    if (err && err.code !== 'ERR_SERVER_NOT_RUNNING') {
+      console.error('Error while closing server:', err);
+      process.exitCode = 1;
+    }
+    process.exit();
+  });
+}
+
+function startServer() {
+  if (server) return Promise.resolve(server);
+
+  return bootstrapAuthStorage().then(() => {
+    server = app.listen(PORT, () => {
       console.log(`CQI Analytics Engine is running on port ${PORT}`);
     });
-  })
-  .catch((error) => {
+
+    server.keepAliveTimeout = 65000;
+    server.headersTimeout = 66000;
+
+    // Defensive keepalive for environments that reap the main process when no
+    // foreground stdio activity is detected, even though the HTTP server is up.
+    keepAliveTimer = setInterval(() => {}, 60000);
+
+    if (RUN_DB_STARTUP_CHECK) {
+      db.testConnection().catch((err) => {
+        console.error('Database startup check failed:', err);
+      });
+    }
+
+    process.on('SIGINT', () => shutdown('SIGINT'));
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGHUP', () => shutdown('SIGHUP'));
+
+    return server;
+  });
+}
+
+if (require.main === module) {
+  startServer().catch((error) => {
     console.error('Server startup failed:', error);
     process.exit(1);
   });
+}
 
-module.exports = app;
+module.exports = { app, startServer };

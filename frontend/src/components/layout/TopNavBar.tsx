@@ -11,6 +11,7 @@ export function TopNavBar() {
     if (pathname.startsWith('/cohort')) return 'Cohort Analysis';
     if (pathname.startsWith('/batch')) return 'Batch Analysis';
     if (pathname.startsWith('/teacher')) return 'Teacher Analysis';
+    if (pathname.startsWith('/internal-external')) return 'Internal vs External Analysis';
     return 'Subject Analysis';
   })();
 

@@ -30,6 +30,11 @@ export function BatchAnalysisPage() {
     analyticsService.getFilterOptions({}).then(res => setFilterOptions(res.data)).catch(console.error);
   }, []);
 
+  useEffect(() => {
+    setMarksData(null);
+    setAttendanceData(null);
+  }, [filters.regulation_id, filters.subject_id, filters.batch_id]);
+
   const fetchData = async () => {
     if (!filters.regulation_id || !filters.subject_id) return;
     setLoading(true);
@@ -71,8 +76,8 @@ export function BatchAnalysisPage() {
           if (sec.student_count > 0) { totalPctSum += sec.avg_percentage; sectionCount++; }
         }
       }
-      const overallAvg = sectionCount > 0 ? totalPctSum / sectionCount : 0;
-      const passRate = totalStudents > 0 ? (totalPassed / totalStudents) * 100 : 0;
+      const overallAvg = sectionCount > 0 ? totalPctSum / sectionCount : null;
+      const passRate = totalStudents > 0 ? (totalPassed / totalStudents) * 100 : null;
       return { totalStudents, overallAvg, passRate, label: 'Avg Marks', subLabel: 'Pass Rate' };
     }
     if (activeTab === 'attendance' && attendanceData) {
@@ -84,8 +89,8 @@ export function BatchAnalysisPage() {
           if (sec.student_count > 0) { totalAttSum += sec.avg_attendance ?? 0; sectionCount++; }
         }
       }
-      const overallAvg = sectionCount > 0 ? totalAttSum / sectionCount : 0;
-      const atRiskRate = totalStudents > 0 ? (totalBelow75 / totalStudents) * 100 : 0;
+      const overallAvg = sectionCount > 0 ? totalAttSum / sectionCount : null;
+      const atRiskRate = totalStudents > 0 ? (totalBelow75 / totalStudents) * 100 : null;
       return { totalStudents, overallAvg, passRate: atRiskRate, label: 'Avg Attendance', subLabel: 'At Risk (<75%)' };
     }
     return null;
@@ -143,12 +148,12 @@ export function BatchAnalysisPage() {
           </div>
           <div className="bg-surface-container-lowest p-4 rounded-xl">
             <p className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">{summaryStats.label}</p>
-            <p className="text-2xl font-black text-primary">{summaryStats.overallAvg.toFixed(1)}%</p>
+            <p className="text-2xl font-black text-primary">{summaryStats.overallAvg !== null ? `${summaryStats.overallAvg.toFixed(1)}%` : '—'}</p>
           </div>
           <div className="bg-surface-container-lowest p-4 rounded-xl">
             <p className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">{summaryStats.subLabel}</p>
-            <p className={`text-2xl font-black ${activeTab === 'attendance' && summaryStats.passRate > 20 ? 'text-red-500' : 'text-primary'}`}>
-              {summaryStats.passRate.toFixed(1)}%
+            <p className={`text-2xl font-black ${activeTab === 'attendance' && summaryStats.passRate !== null && summaryStats.passRate > 20 ? 'text-red-500' : 'text-primary'}`}>
+              {summaryStats.passRate !== null ? `${summaryStats.passRate.toFixed(1)}%` : '—'}
             </p>
           </div>
         </section>
