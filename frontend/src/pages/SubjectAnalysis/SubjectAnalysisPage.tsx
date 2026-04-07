@@ -4,8 +4,10 @@ import { CoPoMatrix } from './CoPoMatrix';
 import { AttainmentCharts, type CoData, type PoData } from './AttainmentCharts';
 import { InsightPanel, type InsightItem } from '../../components/ui/InsightPanel';
 import { analyticsService, type Filters } from '../../services/api';
+import { downloadHtmlAsPdf } from '../../utils/exportReport';
 
 export function SubjectAnalysisPage() {
+
   const [filters, setFilters] = useState<Filters>({});
   const [filterOptions, setFilterOptions] = useState<any>({ regulations: [], subjects: [], batches: [] });
   
@@ -16,6 +18,10 @@ export function SubjectAnalysisPage() {
 
   useEffect(() => {
     analyticsService.getFilterOptions({}).then(res => setFilterOptions(res.data)).catch(console.error);
+    
+    const handleDownload = () => downloadHtmlAsPdf('exportable-report-container', 'Subject_Analysis_Report.pdf');
+    window.addEventListener('cqi:download-report', handleDownload);
+    return () => window.removeEventListener('cqi:download-report', handleDownload);
   }, []);
 
   const fetchData = async () => {
@@ -224,7 +230,7 @@ export function SubjectAnalysisPage() {
   }, [coData, poData, mappingLinksCount, scopeLabel]);
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div id="exportable-report-container" className="space-y-8 animate-fade-in pb-8">
       <FilterPanel 
         actions={
           <button 

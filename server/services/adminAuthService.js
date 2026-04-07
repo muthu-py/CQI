@@ -1,5 +1,6 @@
 const db = require('../db');
 const ApiError = require('../errors/ApiError');
+
 const { hashPassword, verifyPassword } = require('../utils/password');
 const { signJwt } = require('../utils/jwt');
 const {
@@ -41,6 +42,7 @@ async function bootstrapAuthStorage() {
   const password = HARD_ADMIN_PASSWORD;
 
   const passwordHash = hashPassword(password);
+
   await db.query(`
     DELETE FROM admin_users;
   `);

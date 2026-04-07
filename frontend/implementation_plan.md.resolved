@@ -1,0 +1,41 @@
+# Implement Data-Driven Insights Across Dashboards
+
+This plan details how we will integrate automatic inference logic (using `InsightPanel`) into the remaining 4 dashboards, ensuring every page provides actionable textual insights alongside the visual charts.
+
+## Proposed Changes
+
+### `frontend/src/components/ui/InsightPanel.tsx`
+- **[MODIFY]**: Currently, `InsightPanel` hardcodes badge texts like `.badgeText = 'Weak CO Detected'` and `Mapping Alert`. I will add an optional `badgeText` property to the `InsightItem` type so that the other pages can provide completely dynamic context (e.g., "At Risk Section", "Teacher Consistency Alert"). Fallbacks will remain for backward compatibility with `SubjectAnalysisPage`.
+
+### `frontend/src/pages/CohortAnalysis/CohortAnalysisPage.tsx`
+- **[MODIFY]**: Compute `derivedInsights` based on section/batch performance disparities. 
+  - Generates a `strength/weakness` insight pointing out the best/worst-performing batch/section.
+  - Generates an `alert` if there's a highly anomalous pass percentage drop in specific batches.
+  - Insert `<InsightPanel>` below the final chart row.
+
+### `frontend/src/pages/BatchAnalysis/BatchAnalysisPage.tsx`
+- **[MODIFY]**: Compute `derivedInsights` dynamically switching based on the active tab (`marks` or `attendance`).
+  - Identifies which Section (A, B, C) needs intervention for low marks or poor average attendance.
+  - Flags an `alert` if total Pass Rate is critically low (<60%) or At Risk population is dangerously high (>20%).
+  - Insert `<InsightPanel>` beneath the section cards.
+
+### `frontend/src/pages/TeacherAnalysis/TeacherAnalysisPage.tsx`
+- **[MODIFY]**: Analyze the `teacherConsistencyComparison` & `subjectTeacherPerformance` datasets.
+  - Flags an `alert` for classes seeing high standard-deviations (volatile grading).
+  - Highlights `strength` for top-performing teaching records.
+  - Insert `<InsightPanel>` above or below the main performance data grids.
+
+### `frontend/src/pages/InternalExternal/InternalExternalPage.tsx`
+- **[MODIFY]**: Analyze the Student gap datasets.
+  - Emits a `strength` insight if the average gap is extremely close to 0 (well-calibrated internal assessments).
+  - Emits an `alert` if there's a massive systematic disparity (internal marks drastically inflated compared to external).
+  - Flags "Highest Risk Students" that have a gap `> 10%`.
+  - Insert `<InsightPanel>` right below the student detail table.
+
+## User Review Required
+
+Does the analytical logic proposed for each dashboard align with the types of inferences you would expect to see? If you have specific metrics you want dynamically written into these summaries, let me know!
+
+## Verification Plan
+1. Ensure the app builds without TypeScript errors on the new `badgeText` integration.
+2. Manually test each tab to guarantee 0-state gracefully ignores rendering the panel, while populated data correctly renders 1-3 crisp analytical recommendations on screen.

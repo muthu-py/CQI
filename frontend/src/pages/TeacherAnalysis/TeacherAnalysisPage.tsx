@@ -11,8 +11,10 @@ import {
   type TeacherConsistencyComparisonRow,
 } from '../SubjectAnalysis/TeacherPerformanceAnalysis';
 import { analyticsService, type Filters } from '../../services/api';
+import { downloadHtmlAsPdf } from '../../utils/exportReport';
 
 export function TeacherAnalysisPage() {
+
   const [filters, setFilters] = useState<Filters>({});
   const [filterOptions, setFilterOptions] = useState<any>({ regulations: [], subjects: [], batches: [] });
 
@@ -28,6 +30,10 @@ export function TeacherAnalysisPage() {
 
   useEffect(() => {
     analyticsService.getFilterOptions({}).then((res) => setFilterOptions(res.data)).catch(console.error);
+    
+    const handleDownload = () => downloadHtmlAsPdf('exportable-report-container', 'Teacher_Analysis_Report.pdf');
+    window.addEventListener('cqi:download-report', handleDownload);
+    return () => window.removeEventListener('cqi:download-report', handleDownload);
   }, []);
 
   const fetchData = async () => {
@@ -94,12 +100,9 @@ export function TeacherAnalysisPage() {
     }
   };
 
-  const scopeLabel = filters.batch_id
-    ? `Batch ${filters.batch_id}`
-    : 'All Batches';
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div id="exportable-report-container" className="space-y-8 animate-fade-in pb-8">
       <FilterPanel
         actions={
           <button
@@ -132,22 +135,6 @@ export function TeacherAnalysisPage() {
         />
       </FilterPanel>
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-surface-container-lowest p-4 rounded-xl">
-          <p className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">Scope</p>
-          <p className="text-sm font-semibold text-on-surface">{scopeLabel}</p>
-        </div>
-        <div className="bg-surface-container-lowest p-4 rounded-xl">
-          <p className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">Teachers</p>
-          <p className="text-2xl font-black text-primary">{subjectTeacherPerformance.length}</p>
-        </div>
-        <div className="bg-surface-container-lowest p-4 rounded-xl">
-          <p className="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1">Selected Subject</p>
-          <p className="text-sm font-semibold text-on-surface">
-            {filters.subject_id ? `Subject ${filters.subject_id}` : 'Not selected'}
-          </p>
-        </div>
-      </section>
 
       <TeacherPerformanceAnalysis
         subjectTeacherPerformance={subjectTeacherPerformance}

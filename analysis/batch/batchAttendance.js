@@ -31,11 +31,12 @@ function computeBatchAttendance(data) {
     const sectionData = acc[batchId][section];
 
     if (!sectionData.studentMap[studentId]) {
-      sectionData.studentMap[studentId] = { weighted_score: 0 };
+      sectionData.studentMap[studentId] = { weighted_score: 0, total_weight: 0 };
     }
 
-    // Same accumulation logic as attendanceService.js / computeAttendance
+    // Accumulate the products and total weight to calculate weighted average later
     sectionData.studentMap[studentId].weighted_score += percentage * weight;
+    sectionData.studentMap[studentId].total_weight += weight;
   }
 
   // Reduce into final output
@@ -54,8 +55,9 @@ function computeBatchAttendance(data) {
       let below60Count = 0;
       const students = [];
 
-      for (const [studentId, { weighted_score }] of Object.entries(studentMap)) {
-        const score = Number(weighted_score.toFixed(2));
+      for (const [studentId, { weighted_score, total_weight }] of Object.entries(studentMap)) {
+        const finalScore = total_weight > 0 ? weighted_score / total_weight : 0;
+        const score = Number(finalScore.toFixed(2));
         const clamped = Math.max(0, Math.min(100, score));
         const floor = Math.floor(clamped / 10) * 10;
         const bucketStart = floor === 100 ? 90 : floor;

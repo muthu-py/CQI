@@ -3,6 +3,7 @@ import { FilterPanel, FilterSelect } from '../../components/ui/FilterSelect';
 import { SectionMarksCard, type SectionMarksData } from './SectionMarksCard';
 import { SectionAttendanceCard, type SectionAttendanceData } from './SectionAttendanceCard';
 import { analyticsService, type Filters } from '../../services/api';
+import { downloadHtmlAsPdf } from '../../utils/exportReport';
 
 // Section display order — always A, B, C
 const SECTION_ORDER = ['A', 'B', 'C'];
@@ -18,6 +19,7 @@ interface BatchAttendanceResponse {
 }
 
 export function BatchAnalysisPage() {
+
   const [filters, setFilters] = useState<Filters>({});
   const [filterOptions, setFilterOptions] = useState<any>({ regulations: [], subjects: [], batches: [] });
   const [activeTab, setActiveTab] = useState<Tab>('marks');
@@ -28,6 +30,10 @@ export function BatchAnalysisPage() {
 
   useEffect(() => {
     analyticsService.getFilterOptions({}).then(res => setFilterOptions(res.data)).catch(console.error);
+    
+    const handleDownload = () => downloadHtmlAsPdf('exportable-report-container', 'Batch_Analysis_Report.pdf');
+    window.addEventListener('cqi:download-report', handleDownload);
+    return () => window.removeEventListener('cqi:download-report', handleDownload);
   }, []);
 
   useEffect(() => {
@@ -99,7 +105,7 @@ export function BatchAnalysisPage() {
   const hasData = batchIds.length > 0;
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div id="exportable-report-container" className="space-y-8 animate-fade-in pb-8">
       {/* Filter Panel */}
       <FilterPanel
         actions={

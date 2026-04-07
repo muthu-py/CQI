@@ -5,6 +5,7 @@ import { ComparisonBarChart } from './ComparisonBarChart';
 import { ScatterPlot } from './ScatterPlot';
 import { GapBarChart } from './GapBarChart';
 import { DistributionChart } from './DistributionChart';
+import { downloadHtmlAsPdf } from '../../utils/exportReport';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -86,6 +87,7 @@ const normalizeSummary = (
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export function InternalExternalPage() {
+
   const [filters, setFilters] = useState<Filters>({});
   const [filterOptions, setFilterOptions] = useState<any>({
     regulations: [],
@@ -101,6 +103,10 @@ export function InternalExternalPage() {
 
   useEffect(() => {
     analyticsService.getFilterOptions({}).then(res => setFilterOptions(res.data)).catch(console.error);
+    
+    const handleDownload = () => downloadHtmlAsPdf('exportable-report-container', 'Comparison_Analysis_Report.pdf');
+    window.addEventListener('cqi:download-report', handleDownload);
+    return () => window.removeEventListener('cqi:download-report', handleDownload);
   }, []);
 
   useEffect(() => {
@@ -171,7 +177,7 @@ export function InternalExternalPage() {
 
   // ─── Render ─────────────────────────────────────────────────────────────
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div id="exportable-report-container" className="space-y-8 animate-fade-in pb-8">
 
       {/* ── Filter Bar ─────────────────────────────────────────────────── */}
       <FilterPanel
@@ -306,77 +312,7 @@ export function InternalExternalPage() {
             <DistributionChart data={data} />
           </div>
 
-          {/* Row 3: Detail table (top / bottom students by gap) */}
-          <section className="bg-surface-container-lowest rounded-xl p-6">
-            <div className="mb-4">
-              <h3 className="font-manrope font-bold text-lg text-on-surface">
-                Student Detail Table
-              </h3>
-              <p className="text-xs text-on-surface-variant mt-1">
-                All students sorted by gap (largest first). Null = no marks recorded for that component.
-              </p>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-outline-variant/10">
-                    <th className="text-left text-[10px] uppercase tracking-wider text-on-surface-variant font-bold pb-3 pr-4">
-                      Student
-                    </th>
-                    <th className="text-right text-[10px] uppercase tracking-wider text-on-surface-variant font-bold pb-3 pr-4">
-                      Internal %
-                    </th>
-                    <th className="text-right text-[10px] uppercase tracking-wider text-on-surface-variant font-bold pb-3 pr-4">
-                      External %
-                    </th>
-                    <th className="text-right text-[10px] uppercase tracking-wider text-on-surface-variant font-bold pb-3">
-                      Gap
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...data]
-                    .sort((a, b) => (b.gap ?? 0) - (a.gap ?? 0))
-                    .map(row => {
-                      const gapVal = row.gap;
-                      const gapCls =
-                        gapVal === null
-                          ? 'text-on-surface-variant'
-                          : gapVal > 2
-                          ? 'text-error font-bold'
-                          : gapVal < -2
-                          ? 'text-primary font-bold'
-                          : 'text-on-surface';
-                      return (
-                        <tr
-                          key={row.student_id}
-                          className="border-b border-outline-variant/5 last:border-0 hover:bg-surface-container/50 transition-colors"
-                        >
-                          <td className="py-3 pr-4 font-medium text-on-surface">
-                            {row.student_name}
-                          </td>
-                          <td className="py-3 pr-4 text-right text-on-surface-variant">
-                            {row.internal_percentage !== null
-                              ? `${row.internal_percentage.toFixed(1)}%`
-                              : <span className="italic text-xs">—</span>}
-                          </td>
-                          <td className="py-3 pr-4 text-right text-on-surface-variant">
-                            {row.external_percentage !== null
-                              ? `${row.external_percentage.toFixed(1)}%`
-                              : <span className="italic text-xs">—</span>}
-                          </td>
-                          <td className={`py-3 text-right ${gapCls}`}>
-                            {gapVal !== null
-                              ? `${gapVal >= 0 ? '+' : ''}${gapVal.toFixed(1)}%`
-                              : <span className="italic text-xs text-on-surface-variant">—</span>}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </div>
-          </section>
+
         </>
       )}
     </div>

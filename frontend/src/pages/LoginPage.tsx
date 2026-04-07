@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { getToken, login } from '../services/auth';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const token = getToken();
@@ -27,7 +29,27 @@ export function LoginPage() {
       await login(username, password);
       navigate('/subject', { replace: true });
     } catch (submitError) {
-      setError('Invalid username or password');
+      if (axios.isAxiosError(submitError)) {
+        const responseError =
+          typeof submitError.response?.data?.error === 'string'
+            ? submitError.response.data.error
+            : typeof submitError.response?.data === 'string'
+            ? submitError.response.data
+            : submitError.response?.data
+            ? JSON.stringify(submitError.response.data)
+            : null;
+
+        const message = responseError
+          ? `${submitError.response?.status ?? 'Request failed'}: ${responseError}`
+          : submitError.code === 'ERR_NETWORK'
+          ? 'Cannot reach the server at port 3000.'
+          : submitError.message
+          ? `Login failed: ${submitError.message}`
+          : 'Login failed. Please try again.';
+        setError(message);
+      } else {
+        setError('Login failed. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -67,15 +89,25 @@ export function LoginPage() {
               <label className="block text-sm font-medium text-slate-700" htmlFor="password">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                autoComplete="current-password"
-                required
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pr-20 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  className="absolute inset-y-0 right-2 my-auto rounded-md px-2 py-1 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
 
             {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}

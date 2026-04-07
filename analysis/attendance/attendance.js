@@ -22,7 +22,8 @@ function computeAttendance(data) {
     if (!studentGroups[sId]) {
       studentGroups[sId] = {
         student_id: sId,
-        weighted_score: 0.0
+        weighted_score: 0.0,
+        total_weight: 0.0
       };
     }
 
@@ -35,15 +36,17 @@ function computeAttendance(data) {
 
     // Step 3: Pure Math (Sum of components)
     studentGroups[sId].weighted_score += (percentage * weight);
+    studentGroups[sId].total_weight += weight;
   }
 
   // Step 4: Reduction & Formatting
   const result = [];
   for (const sId in studentGroups) {
     const record = studentGroups[sId];
+    const finalScore = record.total_weight > 0 ? record.weighted_score / record.total_weight : 0;
     result.push({
       student_id: record.student_id,
-      weighted_score: Number(record.weighted_score.toFixed(2))
+      weighted_score: Number(finalScore.toFixed(2))
     });
   }
 
